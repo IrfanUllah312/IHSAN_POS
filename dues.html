@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+  if (sessionStorage.getItem('ihsan_auth_session') !== 'true') {
+    window.location.href = 'login.html?redirect=' + encodeURIComponent(location.pathname.split('/').pop());
+  }
+</script>
+<title>Customer Dues · IHSAN TRADERS</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="shell-sidebar"></aside>
+  <main class="main">
+    <div class="topbar" id="shell-topbar"></div>
+
+    <div class="grid grid-3" id="dues-stats" style="margin-bottom:18px;"></div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>Amounts Owed</h2>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <input type="text" id="dues-search" placeholder="Search customer or invoice..." style="width:220px;" oninput="renderDuesTable()">
+          <select id="dues-filter" onchange="renderDuesTable()" style="width:150px;">
+            <option value="unpaid">Owing only</option>
+            <option value="all">All records</option>
+          </select>
+        </div>
+      </div>
+      <table class="data">
+        <thead>
+          <tr><th>Customer</th><th>Invoice(s)</th><th>Last Sale</th><th class="text-right">Total Owed</th><th class="text-right">Paid</th><th class="text-right">Remaining</th><th>Status</th><th></th></tr>
+        </thead>
+        <tbody id="dues-body"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<!-- Record payment modal -->
+<div class="overlay" id="payment-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Record Payment</h3>
+      <button class="modal-close" onclick="closePaymentModal()">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <p class="small muted" id="payment-context"></p>
+      <div class="field">
+        <label>Amount Received</label>
+        <input type="number" id="payment-amount" min="0" placeholder="0">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Payment Method</label>
+          <select id="payment-method">
+            <option value="Online transfer">Online transfer</option>
+            <option value="Cash payment">Cash payment</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Payment Date</label>
+          <input type="date" id="payment-date">
+        </div>
+      </div>
+      <div class="field">
+        <label>Note (optional)</label>
+        <input type="text" id="payment-note" placeholder="e.g. Paid via bank transfer">
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closePaymentModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="submitPayment()">Save Payment</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/db.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/shell.js"></script>
+<script src="js/receipts.js"></script>
+<script src="js/sheets.js"></script>
+<script src="js/dues.js"></script>
+</body>
+</html>

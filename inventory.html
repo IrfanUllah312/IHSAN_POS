@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+  if (sessionStorage.getItem('ihsan_auth_session') !== 'true') {
+    window.location.href = 'login.html?redirect=' + encodeURIComponent(location.pathname.split('/').pop());
+  }
+</script>
+<title>Inventory · IHSAN TRADERS</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="shell-sidebar"></aside>
+  <main class="main">
+    <div class="topbar" id="shell-topbar"></div>
+
+    <div class="grid grid-3" id="inv-stats" style="margin-bottom:18px;"></div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>Items</h2>
+        <div style="display:flex; gap:8px;">
+          <input type="text" id="search-item" placeholder="Search item..." style="width:220px;" oninput="renderInventoryTable()">
+          <button class="btn btn-primary" onclick="openItemModal()">+ Add Item</button>
+        </div>
+      </div>
+      <table class="data">
+        <thead>
+          <tr><th>Item</th><th class="text-right">Stock</th><th class="text-right">Purchase Price</th><th class="text-right">Sell Price</th><th class="text-right">Value</th><th></th></tr>
+        </thead>
+        <tbody id="inventory-body"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<!-- Add/Edit item modal -->
+<div class="overlay" id="item-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="item-modal-title">Add Item</h3>
+      <button class="modal-close" onclick="closeItemModal()">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="item-original-name">
+      <div class="field">
+        <label>Item Name</label>
+        <input type="text" id="item-name" placeholder="e.g. Mineral Water">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Stock (units)</label>
+          <input type="number" id="item-stock" min="0" placeholder="0">
+        </div>
+        <div class="field">
+          <label>Purchase Price</label>
+          <input type="number" id="item-purchase-price" min="0" placeholder="0">
+        </div>
+      </div>
+      <div class="field">
+        <label>Sell Price</label>
+        <input type="number" id="item-sell-price" min="0" placeholder="0">
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeItemModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveItem()">Save Item</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/db.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/shell.js"></script>
+<script src="js/sheets.js"></script>
+<script src="js/inventory.js"></script>
+</body>
+</html>

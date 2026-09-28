@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+  if (sessionStorage.getItem('ihsan_auth_session') !== 'true') {
+    window.location.href = 'login.html?redirect=' + encodeURIComponent(location.pathname.split('/').pop());
+  }
+</script>
+<title>New Invoice · IHSAN TRADERS</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="shell-sidebar"></aside>
+  <main class="main">
+    <div class="topbar" id="shell-topbar"></div>
+
+    <div class="grid grid-2">
+      <!-- Left: builder -->
+      <div class="no-print">
+        <div class="card">
+          <h2>Customer</h2>
+          <div class="field-row">
+            <div class="field">
+              <label>Customer Name</label>
+              <input type="text" id="customer-name" placeholder="Walk-in customer">
+            </div>
+            <div class="field">
+              <label>Phone Number</label>
+              <input type="tel" id="customer-phone" placeholder="03xx-xxxxxxx">
+              <div class="hint" id="phone-required-hint" style="display:none; color:var(--danger); font-weight:600;">
+                Required — used to track and look up this customer's due amount.
+              </div>
+            </div>
+          </div>
+          <div id="customer-due-alert"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h2>Items</h2>
+            <button class="btn btn-outline btn-sm" onclick="addRow()">+ Add Item</button>
+          </div>
+          <div id="stock-info"></div>
+          <table class="data" id="invoice-table">
+            <thead>
+              <tr><th style="width:38%">Item</th><th style="width:16%">Qty</th><th style="width:20%">Price</th><th style="width:18%">Total</th><th></th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h2>Payment</h2>
+          <div class="totals-box">
+            <div class="t-row grand"><span>Grand Total</span><span class="amt" id="grand-total">0</span></div>
+          </div>
+          <div class="field" style="margin-top:12px;">
+            <label>Amount Paid Now (advance)</label>
+            <input type="number" id="amount-paid" min="0" value="0" oninput="updateBalance()">
+            <div class="hint">Leave as 0, or less than the total, if the customer will pay the rest later.</div>
+          </div>
+          <div class="totals-box">
+            <div class="t-row due"><span>Balance Due</span><span class="amt" id="balance-due">Rs 0</span></div>
+          </div>
+          <div style="margin-top:6px;"><span class="badge badge-neutral" id="payment-status-badge">Nothing added yet</span></div>
+
+          <div class="field-row" style="margin-top:18px;">
+            <button class="btn btn-primary btn-block" id="save-btn" onclick="completeInvoice()">Save &amp; Print Invoice</button>
+            <button class="btn btn-outline btn-block" onclick="newInvoice()">New Invoice</button>
+          </div>
+        </div>
+
+        <div class="card" id="post-save-card" style="display:none;">
+          <h2>Saved ✓</h2>
+          <p class="muted small" id="post-save-msg"></p>
+          <div class="field-row">
+            <button class="btn btn-outline btn-block" onclick="printLastInvoice()">Print Invoice Again</button>
+            <button class="btn btn-outline btn-block" onclick="shareLastInvoicePdf()">Share Invoice PDF</button>
+            <button class="btn btn-danger btn-block" id="due-print-btn" onclick="printLastDue()" style="display:none;">Print Due Receipt</button>
+          </div>
+          <button class="btn btn-outline btn-block" id="due-share-btn" onclick="shareLastDue()" style="display:none; margin-top:8px;">Share Due Receipt</button>
+        </div>
+      </div>
+
+      <!-- Right: live receipt preview -->
+      <div>
+        <div class="receipt-preview" id="receipt-print-area">
+          <div class="rp-perf"></div>
+          <div class="rp-body">
+            <div class="receipt-head">
+              <h1 id="rp-business-name">IHSAN TRADERS</h1>
+              <p class="biz-sub" id="rp-phone"></p>
+              <span class="receipt-tag">Customer Copy</span>
+            </div>
+            <p><strong>Date:</strong> <span id="invoice-date"></span></p>
+            <p><strong>Order #:</strong> <span id="invoice-number">0001</span></p>
+            <p><strong>Customer:</strong> <span id="rp-customer">Walk-in</span></p>
+            <hr class="dashed">
+            <table class="invoice-table" id="rp-items-table">
+              <thead><tr><th>Item</th><th class="num">Qty</th><th class="num">Price</th><th class="num">Total</th></tr></thead>
+              <tbody id="rp-items-body"></tbody>
+            </table>
+            <div class="totals-box">
+              <div class="t-row grand"><span>Grand Total</span><span class="amt" id="rp-grand-total">Rs 0</span></div>
+              <div class="t-row"><span>Amount Paid</span><span class="amt" id="rp-paid">Rs 0</span></div>
+              <div class="t-row due" id="rp-due-row" style="display:none;"><span>Balance Due</span><span class="amt" id="rp-balance">Rs 0</span></div>
+            </div>
+          </div>
+          <div class="receipt-foot">
+            <p id="rp-footer-note"><strong>Thank You For Visiting!</strong></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="js/db.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/shell.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="js/receipts.js"></script>
+<script src="js/sheets.js"></script>
+<script src="js/invoice.js"></script>
+</body>
+</html>

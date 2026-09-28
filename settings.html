@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+  if (sessionStorage.getItem('ihsan_auth_session') !== 'true') {
+    window.location.href = 'login.html?redirect=' + encodeURIComponent(location.pathname.split('/').pop());
+  }
+</script>
+<title>Settings · IHSAN TRADERS</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="shell-sidebar"></aside>
+  <main class="main">
+    <div class="topbar" id="shell-topbar"></div>
+
+    <div class="grid grid-2">
+      <div>
+        <div class="card">
+          <h2>Business Info</h2>
+          <p class="muted small">Shown on every printed invoice and receipt.</p>
+          <div class="field" style="margin-top:12px;">
+            <label>Business Name</label>
+            <input type="text" id="s-business-name">
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>Phone</label>
+              <input type="tel" id="s-phone">
+            </div>
+            <div class="field">
+              <label>Low Stock Alert Threshold</label>
+              <input type="number" id="s-threshold" min="0">
+            </div>
+          </div>
+          <div class="field">
+            <label>Address (optional)</label>
+            <input type="text" id="s-address">
+          </div>
+          <div class="field">
+            <label>Receipt Footer Note</label>
+            <input type="text" id="s-footer">
+          </div>
+          <div class="field">
+            <label>Next Invoice Number</label>
+            <input type="number" id="s-invoice-seq" min="1">
+            <div class="hint">Change this only if you need to realign invoice numbering.</div>
+          </div>
+          <button class="btn btn-primary" onclick="saveBusinessSettings()">Save Business Info</button>
+        </div>
+
+        <div class="card">
+          <h2>Backup &amp; Restore</h2>
+          <p class="muted small">Everything is stored only in this browser. Export a backup regularly so you never lose records.</p>
+          <div class="field-row" style="margin-top:12px;">
+            <button class="btn btn-outline btn-block" onclick="exportBackup()">Export Backup (.json)</button>
+            <button class="btn btn-outline btn-block" onclick="document.getElementById('import-file').click()">Import Backup</button>
+            <input type="file" id="import-file" accept="application/json" style="display:none;" onchange="importBackup(event)">
+          </div>
+        </div>
+
+        <div class="card" style="border-color:var(--danger-bg);">
+          <h2 style="color:var(--danger);">Danger Zone</h2>
+          <p class="muted small">Permanently erases inventory, invoices, and dues from this browser. Export a backup first.</p>
+          <button class="btn btn-danger" onclick="clearAllData()">Erase All Data</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <h2>Google Sheet Sync</h2>
+          <p class="muted small">Push your inventory, invoices, and customer dues into a Google Sheet for permanent, off-browser storage.</p>
+          <div class="field" style="margin-top:12px;">
+            <label>Google Sheet Web App URL</label>
+            <input type="url" id="s-sheet-url" placeholder="https://script.google.com/macros/s/.../exec">
+            <div class="hint">This is the Apps Script "Web app" URL from the setup steps below — not the sheet's normal share link.</div>
+          </div>
+          <div class="checkbox-row" style="margin:10px 0 14px;">
+            <input type="checkbox" id="s-autosync">
+            <label style="margin:0;">Sync automatically after every save</label>
+          </div>
+          <div class="field-row">
+            <button class="btn btn-primary btn-block" onclick="saveSheetSettings()">Save Sheet Settings</button>
+            <button class="btn btn-outline btn-block" onclick="testSync()">Sync Now</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>One-time setup (about 2 minutes)</h3>
+          <ol class="step-list">
+            <li>Create or open the Google Sheet you want records saved to.</li>
+            <li>Go to <strong>Extensions &rarr; Apps Script</strong>.</li>
+            <li>Delete any starter code, then paste the script below.</li>
+            <li>Click <strong>Deploy &rarr; New deployment &rarr;</strong> choose type <strong>Web app</strong>.</li>
+            <li>Set "Execute as" to <strong>Me</strong> and "Who has access" to <strong>Anyone</strong>, then click Deploy.</li>
+            <li>Copy the Web app URL it gives you and paste it into the field above.</li>
+          </ol>
+          <p class="muted small">Already had this set up before? Re-paste the script below (Deploy &rarr; Manage deployments &rarr; Edit &rarr; New version) — the Customer Dues columns changed.</p>
+          <div class="card-head" style="margin-top:14px;">
+            <h3 style="margin:0;">Apps Script code</h3>
+            <button class="btn btn-outline btn-sm" onclick="copyScript()">Copy Script</button>
+          </div>
+          <pre class="code-block" id="script-block"></pre>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="js/db.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/shell.js"></script>
+<script src="js/sheets.js"></script>
+<script src="js/settings.js"></script>
+</body>
+</html>

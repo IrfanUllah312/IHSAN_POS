@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign In · IHSAN TRADERS</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  body{ background:var(--ink); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+  .login-wrap{ width:100%; max-width:400px; }
+  .login-brand{ text-align:center; margin-bottom:18px; color:#fff; }
+  .login-brand .brand-mark{ margin:0 auto 10px; }
+  .login-brand h1{ color:#fff; font-size:20px; }
+  .login-brand p{ color:rgba(255,255,255,.55); font-size:12.5px; }
+  .error-msg{ color:var(--danger); font-size:12.5px; margin-top:8px; min-height:16px; }
+  .switch-link{ text-align:center; margin-top:14px; font-size:12.5px; color:var(--text-muted); }
+  .switch-link a{ cursor:pointer; font-weight:600; }
+</style>
+</head>
+<body>
+<div class="login-wrap">
+  <div class="login-brand">
+    <div class="brand-mark" style="width:46px;height:46px;font-size:20px;">IT</div>
+    <h1>IHSAN TRADERS</h1>
+    <p>Billing &amp; Inventory — sign in to continue</p>
+  </div>
+
+  <!-- First run: create the local account -->
+  <div class="card" id="mode-setup" style="display:none;">
+    <h2>Set Up Your Login</h2>
+    <p class="muted small">No account exists on this device yet. Choose a username and password — this only protects access on this device/browser.</p>
+    <div class="field" style="margin-top:12px;">
+      <label>Username</label>
+      <input type="text" id="setup-username" placeholder="e.g. admin">
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="setup-password" placeholder="At least 4 characters">
+    </div>
+    <div class="field">
+      <label>Confirm Password</label>
+      <input type="password" id="setup-password-confirm" placeholder="Re-enter password">
+    </div>
+    <div class="error-msg" id="setup-error"></div>
+    <button class="btn btn-primary btn-block" onclick="createAccount()">Create Login &amp; Continue</button>
+    <div class="switch-link"><a onclick="showSignIn()">Back to sign in</a></div>
+  </div>
+
+  <!-- Returning: sign in -->
+  <div class="card" id="mode-signin" style="display:none;">
+    <h2>Sign In</h2>
+    <div class="field" style="margin-top:12px;">
+      <label>Username</label>
+      <input type="text" id="signin-username">
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="signin-password" onkeydown="if(event.key==='Enter') signIn()">
+    </div>
+    <div class="error-msg" id="signin-error"></div>
+    <button class="btn btn-primary btn-block" onclick="signIn()">Sign In</button>
+    <div class="switch-link"><a onclick="showSetup()">Create another user</a></div>
+    <div class="switch-link">Forgot your password? <a onclick="resetAccount()">Reset all login accounts</a></div>
+  </div>
+</div>
+
+<script src="js/db.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/login.js"></script>
+</body>
+</html>
